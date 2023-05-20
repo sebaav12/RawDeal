@@ -66,7 +66,6 @@ public class Game
         }
     }
     
-    // Funciones para generar las instancias basicas
     private List<SuperStar>  GenerateSuperStarsInstances()
     {
         // almacenamos las cartas de SuperStar en una lista de instancias de la clase SuperStar
@@ -75,17 +74,208 @@ public class Game
         var superStars = JsonSerializer.Deserialize<List<SuperStar>>(jsonSuperStar);
         return superStars;
     }
-    private List<Card> GenerateCardsInstances()
+    private List<ICard> GenerateCardsInstances()
     {
-        // almacenamos las cartas en una lista de instancias de la clase Carta
         string cardsPath = Path.Combine("data", "cards.json");
         string jsonCards = File.ReadAllText(cardsPath);
-        var cards = JsonSerializer.Deserialize<List<Card>>(jsonCards);
-        return cards;
+        var cardsData = JsonSerializer.Deserialize<List<CardData>>(jsonCards);
+
+        List<ICard> cardInstances = new List<ICard>();
+    
+        List<string> cardsWithoutEffects = new List<string>()
+            { "Punch",
+                "Head Butt",
+                "Roundhouse Punch",
+                "Haymaker",
+                "Back Body Drop",
+                "Big Boot",
+                "Shoulder Block",
+                "Kick",
+                "Cross Body Block",
+                "Ensugiri",
+                "Running Elbow Smash",
+                "Drop Kick",
+                "Discus Punch",
+                "Superkick",
+                "Spinning Heel Kick",
+                "Spear",
+                "Clothesline",
+                "Chair Shot",
+                "Hurricanrana",
+                "Hip Toss",
+                "Arm Drag",
+                "Russian Leg Sweep",
+                "Snap Mare",
+                "Gut Buster",
+                "Body Slam",
+                "Back Breaker",
+                "Double Leg Takedown",
+                "Fireman's Carry",
+                "Headlock Takedown",
+                "Belly to Belly Suplex",
+                "Atomic Facebuster",
+                "Atomic Drop",
+                "Inverse Atomic Drop",
+                "Vertical Suplex",
+                "Belly to Back Suplex",
+                "Pump Handle Slam",
+                "Reverse DDT",
+                "Samoan Drop",
+                "Sit Out Powerbomb",
+                "Bulldog",
+                "Fisherman's Suplex",
+                "DDT",
+                "Power Slam",
+                "Powerbomb",
+                "Press Slam",
+                "Wrist Lock",
+                "Arm Bar",
+                "Chin Lock",
+                "Bear Hug",
+                "Full Nelson",
+                "Choke Hold",
+                "Step Over Toe Hold",
+                "Ankle Lock",
+                "Standing Side Headlock",
+                "Cobra Clutch",
+                "Bow & Arrow",
+                "Chicken Wing",
+                "Sleeper",
+                "Camel Clutch",
+                "Boston Crab",
+                "Guillotine Stretch",
+                "Abdominal Stretch",
+                "Torture Rack",
+                "Figure Four Leg Lock",
+                "Step Aside",
+                "Escape Move",
+                "Break the Hold",
+                "Rolling Takedown",
+                "Knee to the Gut",
+                "Elbow to the Face",
+                "Clean Break",
+                "Manager Interferes",
+                "Disqualification!",
+                "No Chance in Hell",
+                "Hmmm",
+                "Don't Think Too Hard",
+                "Whaddya Got?",
+                "Not Yet",
+                "Jockeying for Position",
+                "Irish Whip",
+                "Flash in the Pan",
+                "View of Villainy",
+                "Shake It Off",
+                "Offer Handshake",
+                "Roll Out of the Ring",
+                "Distract the Ref",
+                "Recovery",
+                "Spit At Opponent",
+                "Get Crowd Support",
+                "Comeback!",
+                "Ego Boost",
+                "Deluding Yourself",
+                "Stagger",
+                "Diversion",
+                "Marking Out",
+                "Puppies! Puppies!",
+                "Shane O'Mac",
+                "Maintain Hold",
+                "Pat & Gerry",
+                "Austin Elbow Smash",
+                "Lou Thesz Press",
+                "Double Digits",
+                "Stone Cold Stunner",
+                "Open Up a Can of Whoop-A%$",
+                "Undertaker's Chokeslam",
+                "Undertaker's Flying Clothesline",
+                "Undertaker Sits Up!",
+                "Undertaker's Tombstone Piledriver",
+                "Power of Darkness",
+                "Have a Nice Day!",
+                "Double Arm DDT",
+                "Tree of Woe",
+                "Mandible Claw",
+                "Mr. Socko",
+                "Leaping Knee to the Face",
+                "Facebuster",
+                "I Am the Game",
+                "Pedigree",
+                "Chyna Interferes",
+                "Smackdown Hotel",
+                "Take That Move, Shine It Up Real Nice, Turn That Sumb*tch Sideways, and Stick It Straight Up Your Roody Poo Candy A%$!",
+                "Rock Bottom",
+                "The People's Eyebrow",
+                "The People's Elbow",
+                "Kane's Chokeslam",
+                "Kane's Flying Clothesline",
+                "Kane's Return!",
+                "Kane's Tombstone Piledriver",
+                "Hellfire & Brimstone",
+                "Lionsault",
+                "Y2J",
+                "Don't You Never... EVER!",
+                "Walls of Jericho",
+                "Ayatollah of Rock 'n' Roll-a",
+            };
+        List<string> cardsThatForceYouToDiscardACard = new List<string>()
+            {"Chop", "Arm Bar Takedown", "Collar & Elbow Lockup"};
+        List<string> cardsWithOtherEffects = new List<string>()
+            {
+            };
+    
+        foreach (var cardData in cardsData)
+        {
+            ICard cardInstance;
+
+            if (cardsWithoutEffects.Contains(cardData.Title))
+            {
+                cardInstance = new CardsWithoutEffects
+                {
+                    Title = cardData.Title,
+                    Types = cardData.Types,
+                    Subtypes = cardData.Subtypes,
+                    Fortitude = cardData.Fortitude,
+                    Damage = cardData.Damage,
+                    StunValue = cardData.StunValue,
+                    CardEffect = cardData.CardEffect,
+                };
+                //cardInstances.Add(cardInstance);
+            }
+            else if (cardsThatForceYouToDiscardACard.Contains(cardData.Title))
+            {
+                cardInstance = new CardsThatForceYouToDiscardACard
+                {
+                    Title = cardData.Title,
+                    Types = cardData.Types,
+                    Subtypes = cardData.Subtypes,
+                    Fortitude = cardData.Fortitude,
+                    Damage = cardData.Damage,
+                    StunValue = cardData.StunValue,
+                    CardEffect = cardData.CardEffect,
+                };
+                //cardInstances.Add(cardInstance);
+            }
+            else
+            {
+                cardInstance = new CardsWithOtherEffects
+                {
+                    Title = cardData.Title,
+                    Types = cardData.Types,
+                    Subtypes = cardData.Subtypes,
+                    Fortitude = cardData.Fortitude,
+                    Damage = cardData.Damage,
+                    StunValue = cardData.StunValue,
+                    CardEffect = cardData.CardEffect,
+                };
+                //cardInstances.Add(cardInstance);
+            }
+        
+            cardInstances.Add(cardInstance);
+        }
+
+        return cardInstances;
     }
-    
-    
-    //  Seleccionar Deck
     private List<string> SelectDeck()
     {
         // Le pedimos al jugador elegir un maso, obtenemos una lista con los nombres de las cartas
@@ -94,7 +284,6 @@ public class Game
         List<string> listCardsPlayer1 = new List<string>(lineas);
         return listCardsPlayer1;
     }
-    
     
     // Inicio del Juego
     private void GiveCardsToPlayer(Player player, List<SuperStar> superStars, List<string> listCardsPlayer)
@@ -170,8 +359,6 @@ public class Game
                 }
     }
     
-    
-    // aca ocurren los turnos, se considera player One al jugador "que esta jugando"
     private string Turn(Player playerOne, Player playerTwo)
     {
         // Before your draw segment
@@ -208,10 +395,17 @@ public class Game
                     _view.CongratulateWinner(playerOne.GetName());
                     result = "Rendirse";
                 }
+                else if (playerOne.NumberOfCardInArsenal() == 0)
+                {
+                    _view.CongratulateWinner(playerTwo.GetName());
+                    result = "Rendirse";
+                }
                 else
                 {
                     result = "Siguiente";
                 }
+                
+                
             }
             else if (menuPrincipal == NextPlay.GiveUp)
             {
@@ -239,7 +433,6 @@ public class Game
         }
         return result;
     }
-
     
     // Funciones para el menu principal
     private void ShowBasicInfoOfGame(Player playerOne, Player playerTwo)
@@ -262,6 +455,32 @@ public class Game
         {
             if (habilidadUsada == false)
             {
+                if (playerOne.GetName() == "THE UNDERTAKER")
+                {
+                    int numCardsInHand = playerOne.NumberOfCardsInHand();
+                    if (numCardsInHand >= 2)
+                    {
+                        return _view.AskUserWhatToDoWhenUsingHisAbilityIsPossible();
+                    }
+                    else
+                    {
+                        return _view.AskUserWhatToDoWhenHeCannotUseHisAbility();
+                    }
+                }
+                
+                else if (playerOne.GetName() == "CHRIS JERICHO")
+                {
+                    int numCardsInHand = playerOne.NumberOfCardsInHand();
+                    if (numCardsInHand >= 1)
+                    {
+                        return _view.AskUserWhatToDoWhenUsingHisAbilityIsPossible();
+                    }
+                    else
+                    {
+                        return _view.AskUserWhatToDoWhenHeCannotUseHisAbility();
+                    }
+                }
+                
                 return _view.AskUserWhatToDoWhenUsingHisAbilityIsPossible();
             }
             else
@@ -277,50 +496,128 @@ public class Game
     private string IfPlayerSelectPlayCard(Player playerOne, Player playerTwo)
     {
         // Generamos una lista con las cartas jugables 
-        List<List<(string, int)>> cartasJugablesPosition = new List<List<(string, int)>>();
-        List<Card> cartasJugablesInstancia = new List<Card>();
+        List<List<(string, int, int, int, string)>> cartasJugablesPosition = new List<List<(string, int, int, int, string)>>();
+        List<ICard> cartasJugablesInstancia = new List<ICard>();
         List<string> cartasJugables = new List<string>();
 
         // Almacenaremos la posición en el hand de las cartas
-        int position = 0;
+        int positionInHand = 0;
+        int positionInHandJugable = 0;
+        int positionInCartasJugablesList = 0;
 
-        foreach (Card card in playerOne.GetCardsHand())
+        foreach (ICard card in playerOne.GetCardsHand())
         {
             if (int.Parse(card.Fortitude) <= playerOne.GetFortitude())
             {
                 if (!card.Types.Contains("Reversal"))
                 {
-                    InfoCardInViewableClass(card);
-                    string tipoCard = card.Types[0].ToUpper(); // estamos asumiendo que las cartas no son hibridas
-                    
-                    ViewablePlayInfo playInfo = new ViewablePlayInfo(InfoCardInViewableClass(card), tipoCard);
-                    string cardToPlay = Formatter.PlayToString(playInfo);
-                    
-                    List<(string, int)> cardToPlayInfo = new List<(string, int)>();
-                    cardToPlayInfo.Add((cardToPlay, position));
-                    cartasJugablesPosition.Add(cardToPlayInfo);
-                    cartasJugables.Add(cardToPlay);
-                    cartasJugablesInstancia.Add(card);
+                        string tyOfCardUpper = card.Types[0].ToUpper();
+                        ViewablePlayInfo playInfo = new ViewablePlayInfo(InfoCardInViewableClass(card), tyOfCardUpper);
+                        string cardToPlay = Formatter.PlayToString(playInfo);
+                        List<(string, int, int, int,string)> cardToPlayInfo = new List<(string, int, int, int, string)>();
+                        cardToPlayInfo.Add((cardToPlay, positionInHand, positionInHandJugable, positionInCartasJugablesList, tyOfCardUpper));
+                        
+                        cartasJugablesInstancia.Add(card);
+                        cartasJugables.Add(cardToPlay);
+                        cartasJugablesPosition.Add(cardToPlayInfo);
+
+                        positionInCartasJugablesList++;
+                        
+                        
+                        int numberOfTypes = card.Types.Count;
+
+                        if (numberOfTypes > 1)
+                        {
+                            string tyOfCardUpper2 = card.Types[1].ToUpper();
+                            ViewablePlayInfo playInfo2 = new ViewablePlayInfo(InfoCardInViewableClass(card), tyOfCardUpper2);
+                            string cardToPlay2 = Formatter.PlayToString(playInfo2);
+                            List<(string, int, int, int, string)> cardToPlayInfo2 = new List<(string, int, int, int, string)>();
+                            cardToPlayInfo2.Add((cardToPlay2, positionInHand, positionInHandJugable, positionInCartasJugablesList,tyOfCardUpper2));
+                            
+                            cartasJugables.Add(cardToPlay2);
+                            cartasJugablesPosition.Add(cardToPlayInfo2);
+                            
+                            positionInCartasJugablesList++;
+                        }
+                        
+                        positionInHandJugable++;
                 }
             }
 
-            position++;
+            positionInHand++;
         }
 
+        Console.WriteLine("Todas las cartas en el HAND");
+
+        int positionhand = 0;
+        foreach (var carta in playerOne.GetCardsHand())
+        {
+            Console.WriteLine(carta.Title);
+            Console.WriteLine(positionhand);
+            positionhand++;
+        }
+        
+        Console.WriteLine("");
+        Console.WriteLine("Cartas jugables en el HAND");
+
+        foreach (var carta in cartasJugablesInstancia)
+        {
+            Console.WriteLine(carta.Title);
+        }
+        
+        foreach (var lista in cartasJugablesPosition)
+        {
+            foreach (var tupla in lista)
+            {
+                string formato = string.Format("({0}, {1}, {2}, {3})", tupla.Item2, tupla.Item3, tupla.Item4, tupla.Item5);
+                Console.WriteLine(formato);
+            }
+        }
+        
+        // foreach (var carta in cartasJugables)
+        // {
+        //     Console.WriteLine(carta);
+        // }
+        
+        
         // Obtenemos un integer con la opción escogida
         int actionPlay = _view.AskUserToSelectAPlay(cartasJugables);
 
         // El jugador decide jugar una carta
         if (actionPlay != -1)
         {
-            List<(string card, int valor)> cartaElegidaPosition = cartasJugablesPosition[actionPlay];
-            Card cartaElegida = cartasJugablesInstancia[actionPlay];
             
-            List<Player> players = new List<Player>() {
-                playerOne, playerTwo
-            };
+            Console.WriteLine("Action play");
+            Console.WriteLine(actionPlay);
             
-            string play = PlayCard(players, cartaElegida, cartaElegidaPosition);
+            List<(string card, int positionInHand, int positionInHandJugable, int positionInCartasJugablesList,string type)> cartaElegidaPositionInHand = cartasJugablesPosition[actionPlay];
+            int posicion = cartaElegidaPositionInHand[0].positionInCartasJugablesList;
+            
+            Console.WriteLine("Posición en lista de cartas jugables");
+            Console.WriteLine(posicion);
+            
+            int posicionhand = cartaElegidaPositionInHand[0].positionInHand;
+            Console.WriteLine("Posición en Hand");
+            Console.WriteLine(posicionhand);
+            
+            int posicionhandJugable = cartaElegidaPositionInHand[0].positionInHandJugable;
+            Console.WriteLine("Posición en Hand Jugable");
+            Console.WriteLine(posicionhandJugable);
+            
+            Console.WriteLine("Cartas jugables en el HAND");
+
+            foreach (var carta in cartasJugablesInstancia)
+            {
+                Console.WriteLine(carta.Title);
+            }
+            
+            ICard cartaElegida = cartasJugablesInstancia[posicionhandJugable];
+            
+            Console.WriteLine("carta elegida ");
+            Console.WriteLine(cartaElegida.Title);
+            
+            List<Player> players = new List<Player>() { playerOne, playerTwo };
+            string play = PlayCard(players, cartaElegida, cartaElegidaPositionInHand);
             if (play != null)
             {
                 return "Fin";
@@ -365,246 +662,76 @@ public class Game
             _view.ShowCards(cardsinfo);
         }
     }
-
-    private string PlayCard(List<Player> players,  Card cartaEscogida, List<(string card, int valor)> cartaEscogidaPosition)
+    
+    private string PlayCard(List<Player> players, ICard cardIntance, List<(string card, int positionInHand, int positionInHandJugable, int positionInCartasJugablesList, string type)> cartaEscogidaPositionInHand)
     {
         Player playerOne = players[0];
         Player playerTwo = players[1];
         
-        Card cardPlayed = cartaEscogida;
         string superstarName = playerOne.GetName();
-        string tipoCard = cartaEscogida.Types[0].ToUpper(); // estamos asumiendo que las cartas no son hibridas
+
+        ICard cardPlayed = cardIntance;
+        string typeCard = cartaEscogidaPositionInHand[0].type;
         
-        ViewablePlayInfo playInfo = new ViewablePlayInfo(InfoCardInViewableClass(cartaEscogida), tipoCard);
+        ViewablePlayInfo playInfo = new ViewablePlayInfo(InfoCardInViewableClass(cardPlayed), typeCard);
         string cardToPlay = Formatter.PlayToString(playInfo);
-        
-        // Se despliega info: Se intenta jugar la sgte carta:
         _view.SayThatPlayerIsTryingToPlayThisCard(superstarName, cardToPlay);
-
-        // Removemos la carta del hand segun su posicion en el hand
         
-        playerOne.RemoveCardOfHand(cartaEscogidaPosition[0].valor);
-
-        // Agregamos la carta a su ring area
-        playerOne.AddCardToRingArea(cardPlayed);
-
-        // Obtenemos el daño a aplicar // ojo si oponente es "MANKIND"
-        string damageDone = cardPlayed.Damage;
-        int damageNumber = Int32.Parse(damageDone);
-        int plusFotitude = damageNumber;
-
-        if (playerTwo.GetName() == "MANKIND")
+        string value;
+        
+        if (typeCard == "MANEUVER")
         {
-            if (damageNumber >= 1)
-            {
-                damageNumber = damageNumber - 1;
-            }
+            value = cardPlayed.NoEffect(playerOne, playerTwo, _view, cartaEscogidaPositionInHand);
         }
-
-        // Lista para almacenar la info de las cartas que seran mostradas
-        List<string> cardsinfo = new List<string> { };
-
-        int contador = 0;
-        List<Card> cardsArsenal = playerTwo.GetCardsArsenal();
-        int totalCards = cardsArsenal.Count;
-        int startIndex = Math.Max(0, totalCards - damageNumber);
-
-        for (int i = totalCards - 1; i >= startIndex; i--)
+        else if (typeCard == "ACTION")
         {
-            Card card = cardsArsenal[i];
-
-            if (contador < damageNumber)
-            {
-                cardsinfo.Add(InfoCardInString(card));
-                playerTwo.AddCardToRingSide(card);
-                contador++;
-            }
-            else
-            {
-                break;
-            }
+            value = cardPlayed.Effect(playerOne,cartaEscogidaPositionInHand[0].positionInHand, _view );
         }
-
-        // Se despliega info: La carta fue jugada exitosamente
-        _view.SayThatPlayerSuccessfullyPlayedACard();
-
-        // Se menciona al oponente y se dice que recibe daño 
-        _view.SayThatOpponentWillTakeSomeDamage(playerTwo.GetName(), damageNumber);
-
-        // Mostramos en pantalla las cartas del oponente que fueron pasadas de su arsenal a su ringside
-        int currentDamage = 1;
-        foreach (var card in cardsinfo)
+        else
         {
-            var carta = new List<string>();
-            carta.Add(card);
-            _view.ShowCardOverturnByTakingDamage(card, currentDamage, damageNumber);
-            currentDamage++;
+            value = cardPlayed.NoEffect(playerOne, playerTwo, _view, cartaEscogidaPositionInHand);
         }
         
-        Console.WriteLine("LLEGO ACA");
-
-        // Removemos las cartas del arsenal del oponente surante el turno pierde 
-        if (playerTwo.NumberOfCardInArsenal() < damageNumber)
+        if (value == "Gana Player One")
         {
-            Console.WriteLine("Llego aca");
-            _view.CongratulateWinner(playerOne.GetName());
             return "Gana Player One";
         }
-        if (playerTwo.NumberOfCardInArsenal() >= damageNumber)
+        else
         {
-            // Solo removemos las cartas del oponente de su arsenal
-            playerTwo.RemoveManyCardsArsenal(damageNumber);
-            playerOne.AddFortitude(plusFotitude);
-
-            // Revisamos si el jugador 1 se quedo sin cartas en arsenal, en ese caso pierde
-            // if (playerOne.NumberOfCardInArsenal() == 0)
-            // {
-            //     // Jugador pierde la partida, Oponente gana
-            //     Console.WriteLine("Llego aca 2");
-            //     _view.CongratulateWinner(playerTwo.GetName());
-            //     return "Pierde Player One";
-            // }
-            
-            // if (playerTwo.NumberOfCardInArsenal() == 0)
-            // {
-            //     // Jugador pierde la partida, Oponente gana
-            //     _view.CongratulateWinner(playerOne.GetName());
-            //     return "Pierde Player One";
-            // }
+            return null;
         }
-
-        return null;
     }
     
     // Funciones que ejecutan las habilidades de los jugadores
     private void ExecuteIfPlayTheUnderTaker(Player player)
     {
-        int numCardsInHand = player.NumberOfCardsInHand();
-        if (numCardsInHand >= 2)
-        {
-            // Se descarta la primera carta
-            _view.SayThatPlayerIsGoingToUseHisAbility(player.GetName(),
-                player.CardSuperStar().SuperstarAbility);
-            List<string> cardsHandInfo = GetInfoCardsInHand(player);
-            int totalCardsToDiscard = 2;
-            int idCartaDescartada = _view.AskPlayerToSelectACardToDiscard(cardsHandInfo,
-                player.GetName(), player.GetName(), totalCardsToDiscard);
-            player.moveOneCardOfHandToRingSide(idCartaDescartada);
-
-            // Se descarta la segunda carta 
-            List<string> cardsHandInfo2 = GetInfoCardsInHand(player);
-            int totalCardsToDiscard2 = 1;
-            int idCartaDescartada2 = _view.AskPlayerToSelectACardToDiscard(cardsHandInfo2,
-                player.GetName(), player.GetName(), totalCardsToDiscard2);
-            player.moveOneCardOfHandToRingSide(idCartaDescartada2);
-
-            // Se pasa una carta del RingSide a la Mano
-            List<string> cardsRingSideInfo = GetInfoCardsInRingSide(player);
-            int numCartas = 1;
-            int cartaElegida =
-                _view.AskPlayerToSelectCardsToPutInHisHand("THE UNDERTAKER", numCartas, cardsRingSideInfo);
-
-            // Retiramos la carta elegida del RingSide y la dejamos en la posición 0 del arsenal
-            player.moveOneCardRingSideToHand(cartaElegida);
-        }
+        TheUnderTaker theUnderTaker = new TheUnderTaker();
+        theUnderTaker.Hability(player, _view);
     }
     private void ExecuteIfPlayChrisJericho(Player playerOne, Player playerTwo)
     {
-        int numCardsInHand = playerOne.NumberOfCardsInHand();
-        if (numCardsInHand >= 1)
-        {
-            // Primera Parte: Juagdor descarta una carta
-            _view.SayThatPlayerIsGoingToUseHisAbility(playerOne.GetName(),
-                playerOne.CardSuperStar().SuperstarAbility);
-            List<string> cardsHandInfo = GetInfoCardsInHand(playerOne);
-
-            // Se descarta 1 carta del jugador 
-            int totalCardsToDiscard = 1;
-            int idCartaDescartada = _view.AskPlayerToSelectACardToDiscard(cardsHandInfo,
-                playerOne.GetName(), playerOne.GetName(), totalCardsToDiscard);
-            playerOne.moveOneCardOfHandToRingSide(idCartaDescartada);
-
-            // Parte 2: Oponente descarta una carta 
-            List<string> cardsHandInfoOpponent = GetInfoCardsInHand(playerTwo);
-
-            // Se descarta 1 carta del jugador Oponente
-            int totalCardsToDiscardOpponent = 1;
-            int idCartaDescartadaOpponent = _view.AskPlayerToSelectACardToDiscard(cardsHandInfoOpponent,
-                playerTwo.GetName(), playerTwo.GetName(), totalCardsToDiscardOpponent);
-            playerTwo.moveOneCardOfHandToRingSide(idCartaDescartadaOpponent);
-        }
+        ChrisJericho chrisJericho = new ChrisJericho();
+        chrisJericho.Hability(playerOne, playerTwo, _view);
     }
     private void ExecuteIfPlaySteveColdSteveAustin(Player playerOne)
     {
-        int numCardsInArsenal = playerOne.NumberOfCardInArsenal();
-        if (numCardsInArsenal >= 1)
-        {
-            // Se roba una carta del arsenenal
-            playerOne.takeOneCard();
-            _view.SayThatPlayerIsGoingToUseHisAbility(playerOne.GetName(),
-                playerOne.CardSuperStar().SuperstarAbility);
-            _view.SayThatPlayerDrawCards(playerOne.GetName(), 1);
-
-            List<string> cardsHandInfo = new List<string> { };
-            foreach (Card card in playerOne.GetCardsHand())
-            {
-                string titulo = card.Title;
-                List<string> cardTypes = card.Types;
-                List<string> subtypes = card.Subtypes;
-                string fortitude = card.Fortitude;
-                string damage = card.Damage;
-                string stunValue = card.StunValue;
-                string cardEffect = card.CardEffect;
-                
-                ViewableCardInfo cardInfo = new ViewableCardInfo(titulo, fortitude, damage, stunValue, cardTypes, subtypes, cardEffect);
-                string cardStr = Formatter.CardToString(cardInfo);
-                
-                //string cardInfo = Formatter.CardToString(titulo, fortitude, damage, stunValue, cardTypes,subtypes, cardEffect);
-                cardsHandInfo.Add(cardStr);
-            }
-
-            // Se escoge una carta del Hand
-            int idCartaDescartada =
-                _view.AskPlayerToReturnOneCardFromHisHandToHisArsenal(playerOne.GetName(), cardsHandInfo);
-
-            // Se mueve la carta seleccionada del Hand al Arsenal en posición 0
-            playerOne.MoveSelectedCardOfHandToArsenal(idCartaDescartada);
-        }
+        SteveColdSteveAustin steveColdSteveAustin = new SteveColdSteveAustin();
+        steveColdSteveAustin.Hability(playerOne, _view);
     }
     private void ExecuteIfPlayTheRock(Player player)
     {
         if (player.GetName() == "THE ROCK")
         {
-            int numCartasRingSide = player.NumberOfCardsInRingSide();
-
-            if (numCartasRingSide > 0)
-            {
-                bool useHability = _view.DoesPlayerWantToUseHisAbility("THE ROCK");
-                if (useHability == true)
-                {
-                    List<string> cardsinfo = GetInfoCardsInRingSide(player);
-                    int numCartas = 1;
-                    int cartaElegida = _view.AskPlayerToSelectCardsToRecover("THE ROCK", numCartas, cardsinfo);
-                
-                    // Retiramos la carta elegida del RingSide y la dejamos en la posición 0 del arsenal
-                    player.moveOneCardRingSideToArsenal(cartaElegida);
-                }
-            }
+            TheRock theRock = new TheRock();
+            theRock.Habilidad(player, _view);
         }
     }
     private void ExecuteIfPlayMankind(Player player)
     {
         if (player.GetName() == "MANKIND")
         {
-            if (player.NumberOfCardInArsenal() >= 2)
-            {
-                player.takeOneCard();
-                player.takeOneCard();
-            }
-            else
-            {
-                player.takeOneCard();
-            }
+            Mankind mankind = new Mankind();
+            mankind.Hability(player, _view);
         }
         else
         {
@@ -615,62 +742,16 @@ public class Game
     {
         if (playerOne.GetName() == "KANE")
         {
-            // El jugador es KANE => usa su habilidad
-            if (playerTwo.NumberOfCardInArsenal() <= 1)
-            {
-                // Oponente pierde la partida, Jugador gana
-                _view.CongratulateWinner(playerOne.GetName());
-            }
-            else
-            {
-                    int damageNumber = 1;
-                    List<string> cardsinfo = new List<string> { };
-                
-                    int contador = 0;
-                    List<Card> cardsArsenal = playerTwo.GetCardsArsenal();
-                    int totalCards = cardsArsenal.Count;
-                    int startIndex = Math.Max(0, totalCards - damageNumber);
-
-                    for (int i = totalCards - 1; i >= startIndex; i--)
-                    {
-                        Card card = cardsArsenal[i];
-
-                        if (contador < damageNumber)
-                        {
-                            cardsinfo.Add(InfoCardInString(card));
-                            playerTwo.AddCardToRingSide(card);
-                            contador++;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    
-                    // Decimos que el jugador usa su habilidad y el oponente toma daño 
-                    _view.SayThatPlayerIsGoingToUseHisAbility(playerOne.GetName(), playerOne.CardSuperStar().SuperstarAbility);
-                    _view.SayThatOpponentWillTakeSomeDamage(playerTwo.GetName(), 1);
-                    
-                    // Mostramos en pantalla las cartas del oponente que fueron pasadas de su arsenal a su ringside
-                    int currentDamage = 1;
-                    foreach (var card in cardsinfo)
-                    {
-                        var carta = new List<string>();
-                        carta.Add(card);
-                        _view.ShowCardOverturnByTakingDamage(card,currentDamage,damageNumber);
-                        currentDamage++;
-                    }
-                    playerTwo.RemoveManyCardsArsenal(damageNumber);
-            }
+            Kane kane = new Kane();
+            kane.Hability(playerOne, playerTwo, _view);
         }
     }
 
-    
     // Funciones que nos permiten obtener información
     private List<string> GetInfoCardsInHand(Player player)
     {
         List<string> cardsinfo = new List<string> { };
-        foreach (Card card in player.GetCardsHand())
+        foreach (ICard card in player.GetCardsHand())
         {
             string titulo = card.Title;
             List<string> cardTypes = card.Types;
@@ -691,7 +772,7 @@ public class Game
     private List<string> GetInfoCardsInRingArea(Player player)
     {
         List<string> cardsinfo = new List<string> { };
-        foreach (Card card in player.GetCardsRingArea())
+        foreach (ICard card in player.GetCardsRingArea())
         {
             string titulo = card.Title;
             List<string> cardTypes = card.Types;
@@ -713,7 +794,7 @@ public class Game
     {
         List<string> cardsinfo = new List<string> { };
                         
-        foreach (Card card in player.GetCardsRingSide())
+        foreach (ICard card in player.GetCardsRingSide())
         {
             string titulo = card.Title;
             List<string> cardTypes = card.Types;
@@ -732,7 +813,7 @@ public class Game
         return cardsinfo;
     }
     
-    private string InfoCardInString(Card card)
+    private string InfoCardInString(ICard card)
     {
         string titulo = card.Title;
         List<string> cardTypes = card.Types;
@@ -748,7 +829,7 @@ public class Game
         string cardStr = Formatter.CardToString(cardInfo);
         return cardStr;
     }
-    private ViewableCardInfo InfoCardInViewableClass(Card card)
+    private ViewableCardInfo InfoCardInViewableClass(ICard card)
     {
         string titulo = card.Title;
         List<string> cardTypes = card.Types;
@@ -761,8 +842,7 @@ public class Game
         ViewableCardInfo cardInfo = new ViewableCardInfo(titulo, fortitude, damage, stunValue, cardTypes, subtypes, cardEffect);
         return cardInfo;
     }
-    
-    private void SaveCardsInArsenal(Player player,List<string> listCardsPlayer, List<Card> cards)
+    private void SaveCardsInArsenal(Player player,List<string> listCardsPlayer, List<ICard> cards)
     {
         foreach (var nameCard in listCardsPlayer)
         {
@@ -775,6 +855,4 @@ public class Game
             }
         }
     }
-    
-    
 }

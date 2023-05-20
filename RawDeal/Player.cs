@@ -6,9 +6,9 @@ using RawDeal.data;
 public class Player
 {
     private string name;
-    private List<Card> hand;
-    private List<Card> arsenal;
-    private List<Card> ringSide;
+    private List<ICard> hand;
+    private List<ICard> arsenal;
+    private List<ICard> ringSide;
     private List<object> ringArea;
     private SuperStar superStar;
     private int fortitude;
@@ -17,9 +17,9 @@ public class Player
     public Player(string name)
     {
         this.name = name;
-        this.hand = new List<Card>();
-        this.arsenal = new List<Card>();
-        this.ringSide = new List<Card>();
+        this.hand = new List<ICard>();
+        this.arsenal = new List<ICard>();
+        this.ringSide = new List<ICard>();
         this.ringArea = new List<object>();
         this.fortitude = 0;
     }
@@ -58,7 +58,7 @@ public class Player
         return numberCardHand;
     }
 
-    public List<Card> GetCardsHand()
+    public List<ICard> GetCardsHand()
     {
         return this.hand;
     }
@@ -69,7 +69,7 @@ public class Player
     }
     
     // Metodos que involucran cartas en el Arsenal
-    public List<Card> GetCardsArsenal()
+    public List<ICard> GetCardsArsenal()
     {
         return this.arsenal;
     }
@@ -80,7 +80,7 @@ public class Player
         return numberCardArsenal;
     }
     
-    public void AddCardToArsenal(Card card)
+    public void AddCardToArsenal(ICard card)
     {
         this.arsenal.Add(card);
     }
@@ -113,7 +113,7 @@ public class Player
     }
     
     // Metodos que involucran cartas en el Ring Side
-    public List<Card> GetCardsRingSide()
+    public List<ICard> GetCardsRingSide()
     {
         return this.ringSide;
     }
@@ -124,7 +124,7 @@ public class Player
         return num;
     }
     
-    public void AddCardToRingSide(Card card)
+    public void AddCardToRingSide(ICard card)
     {
         this.ringSide.Add(card);
     }
@@ -132,14 +132,14 @@ public class Player
     // Metodos que mueven cartas de una lista a otra
     public void moveOneCardRingSideToArsenal(int position)
     {
-        Card carta = this.ringSide[position];
+        ICard carta = this.ringSide[position];
         this.ringSide.RemoveAt(position);
         this.arsenal.Insert(0, carta);
     }
     
     public void moveOneCardRingSideToHand(int position)
     {
-        Card carta = this.ringSide[position];
+        ICard carta = this.ringSide[position];
         this.ringSide.RemoveAt(position);
         this.hand.Add(carta);
     }
@@ -151,13 +151,13 @@ public class Player
         for (int i = 0; i < handSize; i++)
         {
             int lastCardIndex = this.arsenal.Count - 1;
-            Card carta = this.arsenal[lastCardIndex];
+            ICard carta = this.arsenal[lastCardIndex];
             AddCardToHand(carta);
             this.arsenal.RemoveAt(lastCardIndex);
         }
     }
     
-    public void AddCardToHand(Card card)
+    public void AddCardToHand(ICard card)
     {
         this.hand.Add(card);
     }
@@ -166,7 +166,7 @@ public class Player
     {
         // La carta se toma del final del arsenal
         int lastIndex = this.arsenal.Count - 1;
-        Card carta = this.arsenal[lastIndex];
+        ICard carta = this.arsenal[lastIndex];
         this.arsenal.RemoveAt(lastIndex);
         AddCardToHand(carta);
     }
@@ -174,14 +174,14 @@ public class Player
     // Descartar: En este juego Descartar significa pasar cartas de la mano al ringside
     public void moveOneCardOfHandToRingSide(int position)
     {
-        Card carta = this.hand[position];
+        ICard carta = this.hand[position];
         this.hand.RemoveAt(position);
         this.ringSide.Add(carta);
     }
 
     public void MoveSelectedCardOfHandToArsenal(int position)
     {
-        Card carta = this.hand[position];
+        ICard carta = this.hand[position];
         this.hand.RemoveAt(position);
         this.arsenal.Insert(0, carta);
     }

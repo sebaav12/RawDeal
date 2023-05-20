@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class Validate
 {
-    public List<object> ValidateDeck(List<string> listCardsPlayer, List<RawDeal.Card> cards, List<RawDeal.data.SuperStar> superStars)
+    public List<object> ValidateDeck(List<string> listCardsPlayer, List<ICard> cards, List<SuperStar> superStars)
     {
         List<object> miRetorno = SetupRetorno();
         
@@ -108,7 +108,7 @@ public class Validate
         return infoSuperStar;
     }
 
-    private bool ValidateDeckDontHaveRepeatCards(List<string> listCardsPlayer, List<RawDeal.Card> cards)
+    private bool ValidateDeckDontHaveRepeatCards(List<string> listCardsPlayer, List<RawDeal.ICard> cards)
     {
         
         Dictionary<string, int> recuentos = new Dictionary<string, int>();
@@ -162,7 +162,7 @@ public class Validate
         return false;
     }
 
-    private bool DeckHaveHeelAndFace(List<string> listCardsPlayer, List<RawDeal.Card> cards)
+    private bool DeckHaveHeelAndFace(List<string> listCardsPlayer, List<RawDeal.ICard> cards)
     {
         bool haveCardHell = false;
         bool haveCardFace = false;
@@ -196,7 +196,7 @@ public class Validate
         return false;
     }
     
-    private bool DeckHaveOnlyCardsWhitOneLogo(List<string> listCardsPlayer, List<RawDeal.Card> cards, List<RawDeal.data.SuperStar> superStars, string superStarName)
+    private bool DeckHaveOnlyCardsWhitOneLogo(List<string> listCardsPlayer, List<RawDeal.ICard> cards, List<RawDeal.data.SuperStar> superStars, string superStarName)
     {
         string logoValido = "";
 
